@@ -4,7 +4,7 @@ import "log"
 
 func MakeConfig() Config {
 	cfg := Config{}
-	err := cfg.Load("blackswan-server")
+	err := cfg.Load("raihan-go-boilerplate")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -13,10 +13,9 @@ func MakeConfig() Config {
 }
 
 type Config struct {
-	Stage           string                `env:"STAGE"`
-	DB              DBConfig              `env-prefix:"DB_"`
-	WebService      WebServiceConfig      `env-prefix:"WEBSERVICE_"`
-	KeycloakService KeycloakServiceConfig `env-prefix:"KEYCLOAKSERVICE_"`
+	Stage      string           `env:"STAGE"`
+	DB         DBConfig         `env-prefix:"DB_"`
+	WebService WebServiceConfig `env-prefix:"WEBSERVICE_"`
 }
 
 type DBConfig struct {
@@ -34,15 +33,6 @@ type DBConfig struct {
 
 type WebServiceConfig struct {
 	Address string `yaml:"address" env:"ADDRESS" env-default:"localhost:8081"`
-}
-
-type KeycloakServiceConfig struct {
-	Realm        string `env:"REALM"`
-	Username     string `env:"USERNAME"`
-	Password     string `env:"PASSWORD"`
-	BaseUrl      string `env:"BASE_URL"`
-	ClientId     string `env:"CLIENT_ID"`
-	ClientSecret string `env:"CLIENT_SECRET"`
 }
 
 func (c *Config) Load(serviceName string) error {
