@@ -8,7 +8,6 @@ func MustCreateSchemaIfNotExist(modeler postgre.Modeler) {
 	entities := []interface{}{
 		(*Category)(nil),
 		(*Product)(nil),
-		(*User)(nil),
 		(*Store)(nil),
 	}
 
