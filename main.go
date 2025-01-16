@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/raihansuwanto/go-boilerplate/internal/app"
+	"github.com/raihansuwanto/go-boilerplate/app"
 )
 
 func main() {
