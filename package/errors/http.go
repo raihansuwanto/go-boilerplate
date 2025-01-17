@@ -7,7 +7,7 @@ import (
 	"github.com/go-chi/render"
 )
 
-func RederError(r *http.Request, w http.ResponseWriter, err error) {
+func RenderError(r *http.Request, w http.ResponseWriter, err error) {
 	errs := err.(Errors)
 	if len(errs) == 0 {
 		render.Status(r, http.StatusInternalServerError)

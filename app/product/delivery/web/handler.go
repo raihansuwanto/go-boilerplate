@@ -17,13 +17,13 @@ func CategoryCreator(handler usecase.Category) http.HandlerFunc {
 		request := dto.CategoryCreatorRequest{}
 
 		if err := render.DecodeJSON(r.Body, &request); err != nil {
-			errors.RederError(r, w, errors.NewBadRequestError())
+			errors.RenderError(r, w, errors.NewBadRequestError())
 			return
 		}
 
 		result, err := handler.Create(ctx, &request)
 		if err != nil {
-			errors.RederError(r, w, err)
+			errors.RenderError(r, w, err)
 			return
 		}
 		render.Status(r, http.StatusOK)
@@ -42,7 +42,7 @@ func CategoryLoader(handler usecase.Category) http.HandlerFunc {
 
 		result, err := handler.GetDetail(ctx, &request)
 		if err != nil {
-			errors.RederError(r, w, err)
+			errors.RenderError(r, w, err)
 			return
 		}
 		render.Status(r, http.StatusOK)
@@ -57,13 +57,13 @@ func ProductCreator(handler usecase.Product) http.HandlerFunc {
 		request := dto.ProductCreatorRequest{}
 
 		if err := render.DecodeJSON(r.Body, &request); err != nil {
-			errors.RederError(r, w, errors.NewBadRequestError())
+			errors.RenderError(r, w, errors.NewBadRequestError())
 			return
 		}
 
 		result, err := handler.Create(ctx, &request)
 		if err != nil {
-			errors.RederError(r, w, err)
+			errors.RenderError(r, w, err)
 			return
 		}
 		render.Status(r, http.StatusOK)
@@ -82,7 +82,7 @@ func ProductLoader(handler usecase.Product) http.HandlerFunc {
 
 		result, err := handler.GetDetail(ctx, &request)
 		if err != nil {
-			errors.RederError(r, w, err)
+			errors.RenderError(r, w, err)
 			return
 		}
 		render.Status(r, http.StatusOK)
