@@ -6,6 +6,7 @@ import (
 	"github.com/go-pg/pg/v10"
 	"github.com/raihansuwanto/go-boilerplate/app/ent"
 	"github.com/raihansuwanto/go-boilerplate/package/config"
+	"github.com/raihansuwanto/go-boilerplate/package/logger"
 	"github.com/raihansuwanto/go-boilerplate/package/postgre"
 	"github.com/raihansuwanto/go-boilerplate/runner"
 	"github.com/raihansuwanto/go-boilerplate/runner/web"
@@ -35,7 +36,7 @@ func newApp(
 
 func (a App) Run(ctx context.Context) error {
 
-	logrus.WithContext(ctx).Info("Starting app")
+	logger.WithContext(ctx).Info("Starting app")
 	logrus.Info("config: ", a.cfg)
 
 	webService := web.NewWebService(web.WithAddress(a.cfg.WebService.Address))

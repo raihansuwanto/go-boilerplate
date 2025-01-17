@@ -6,7 +6,7 @@ import (
 	"github.com/raihansuwanto/go-boilerplate/app/helper/db"
 	"github.com/raihansuwanto/go-boilerplate/app/product/repo"
 	"github.com/raihansuwanto/go-boilerplate/app/product/usecase/dto"
-	"github.com/sirupsen/logrus"
+	"github.com/raihansuwanto/go-boilerplate/package/logger"
 )
 
 type ProductImpl struct {
@@ -29,14 +29,14 @@ func (p *ProductImpl) Create(ctx context.Context, cmd *dto.ProductCreatorRequest
 
 	_, err := p.categoryRepo.Load(ctx, db.Filter{Field: "id", Value: cmd.CategoryID})
 	if err != nil {
-		logrus.WithContext(ctx).WithError(err).Error("failed to load category")
+		logger.WithContext(ctx).WithError(err).Error("failed to load category")
 		return nil, err
 	}
 
 	product := cmd.RequestToEntity()
 
 	if err := p.productRepo.Create(ctx, &product); err != nil {
-		logrus.WithContext(ctx).WithError(err).Error("failed to create product")
+		logger.WithContext(ctx).WithError(err).Error("failed to create product")
 		return nil, err
 	}
 
@@ -49,13 +49,13 @@ func (p *ProductImpl) Create(ctx context.Context, cmd *dto.ProductCreatorRequest
 func (p *ProductImpl) Load(ctx context.Context, cmd *dto.ProductLoaderRequest) (*dto.ProductLoaderResponse, error) {
 	product, err := p.productRepo.Load(ctx, db.Filter{Field: "id", Value: cmd.ID})
 	if err != nil {
-		logrus.WithContext(ctx).WithError(err).Error("failed to load product")
+		logger.WithContext(ctx).WithError(err).Error("failed to load product")
 		return nil, err
 	}
 
 	category, err := p.categoryRepo.Load(ctx, db.Filter{Field: "id", Value: product.CategoryID})
 	if err != nil {
-		logrus.WithContext(ctx).WithError(err).Error("failed to load category")
+		logger.WithContext(ctx).WithError(err).Error("failed to load category")
 		return nil, err
 	}
 

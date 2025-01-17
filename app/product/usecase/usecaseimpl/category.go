@@ -6,7 +6,7 @@ import (
 	"github.com/raihansuwanto/go-boilerplate/app/helper/db"
 	"github.com/raihansuwanto/go-boilerplate/app/product/repo"
 	"github.com/raihansuwanto/go-boilerplate/app/product/usecase/dto"
-	"github.com/sirupsen/logrus"
+	"github.com/raihansuwanto/go-boilerplate/package/logger"
 )
 
 type CategoryImpl struct {
@@ -22,7 +22,7 @@ func NewCategory(categoryRepo repo.CategoryRepo) *CategoryImpl {
 func (e *CategoryImpl) Create(ctx context.Context, req *dto.CategoryCreatorRequest) (*dto.CategoryCreatorResponse, error) {
 	category := req.RequestToEntity()
 	if err := e.categoryRepo.Create(ctx, &category); err != nil {
-		logrus.WithError(err).Error("failed to create category")
+		logger.WithContext(ctx).WithError(err).Error("failed to create category")
 		return nil, err
 	}
 
@@ -35,7 +35,7 @@ func (e *CategoryImpl) Create(ctx context.Context, req *dto.CategoryCreatorReque
 func (e *CategoryImpl) Load(ctx context.Context, req *dto.CategoryLoaderRequest) (*dto.CategoryLoaderResponse, error) {
 	category, err := e.categoryRepo.Load(ctx, db.Filter{Field: "id", Value: req.ID})
 	if err != nil {
-		logrus.WithError(err).Error("failed to load category")
+		logger.WithContext(ctx).WithError(err).Error("failed to load category")
 		return nil, err
 	}
 
