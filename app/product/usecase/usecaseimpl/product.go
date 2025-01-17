@@ -46,7 +46,7 @@ func (p *ProductImpl) Create(ctx context.Context, cmd *dto.ProductCreatorRequest
 	}, nil
 }
 
-func (p *ProductImpl) Load(ctx context.Context, cmd *dto.ProductLoaderRequest) (*dto.ProductLoaderResponse, error) {
+func (p *ProductImpl) GetDetail(ctx context.Context, cmd *dto.ProductLoaderRequest) (*dto.ProductLoaderResponse, error) {
 	product, err := p.productRepo.Load(ctx, db.Filter{Field: "id", Value: cmd.ID})
 	if err != nil {
 		logger.WithContext(ctx).WithError(err).Error("failed to load product")

@@ -20,6 +20,11 @@ func NewCategory(categoryRepo repo.CategoryRepo) *CategoryImpl {
 }
 
 func (e *CategoryImpl) Create(ctx context.Context, req *dto.CategoryCreatorRequest) (*dto.CategoryCreatorResponse, error) {
+
+	if err := req.Validate(); err != nil {
+		return nil, err
+	}
+
 	category := req.RequestToEntity()
 	if err := e.categoryRepo.Create(ctx, &category); err != nil {
 		logger.WithContext(ctx).WithError(err).Error("failed to create category")
@@ -32,7 +37,7 @@ func (e *CategoryImpl) Create(ctx context.Context, req *dto.CategoryCreatorReque
 	}, nil
 }
 
-func (e *CategoryImpl) Load(ctx context.Context, req *dto.CategoryLoaderRequest) (*dto.CategoryLoaderResponse, error) {
+func (e *CategoryImpl) GetDetail(ctx context.Context, req *dto.CategoryLoaderRequest) (*dto.CategoryLoaderResponse, error) {
 	category, err := e.categoryRepo.Load(ctx, db.Filter{Field: "id", Value: req.ID})
 	if err != nil {
 		logger.WithContext(ctx).WithError(err).Error("failed to load category")

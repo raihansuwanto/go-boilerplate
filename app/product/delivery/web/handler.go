@@ -7,6 +7,7 @@ import (
 	"github.com/go-chi/render"
 	"github.com/raihansuwanto/go-boilerplate/app/product/usecase"
 	"github.com/raihansuwanto/go-boilerplate/app/product/usecase/dto"
+	"github.com/raihansuwanto/go-boilerplate/package/errors"
 )
 
 func CategoryCreator(handler usecase.Category) http.HandlerFunc {
@@ -16,15 +17,13 @@ func CategoryCreator(handler usecase.Category) http.HandlerFunc {
 		request := dto.CategoryCreatorRequest{}
 
 		if err := render.DecodeJSON(r.Body, &request); err != nil {
-			render.Status(r, http.StatusBadRequest)
-			render.JSON(w, r, err)
+			errors.RederError(r, w, errors.NewBadRequestError())
 			return
 		}
 
 		result, err := handler.Create(ctx, &request)
 		if err != nil {
-			render.Status(r, http.StatusInternalServerError)
-			render.JSON(w, r, err)
+			errors.RederError(r, w, err)
 			return
 		}
 		render.Status(r, http.StatusOK)
@@ -41,10 +40,9 @@ func CategoryLoader(handler usecase.Category) http.HandlerFunc {
 			ID: chi.URLParam(r, "id"),
 		}
 
-		result, err := handler.Load(ctx, &request)
+		result, err := handler.GetDetail(ctx, &request)
 		if err != nil {
-			render.Status(r, http.StatusInternalServerError)
-			render.JSON(w, r, err)
+			errors.RederError(r, w, err)
 			return
 		}
 		render.Status(r, http.StatusOK)
@@ -59,15 +57,13 @@ func ProductCreator(handler usecase.Product) http.HandlerFunc {
 		request := dto.ProductCreatorRequest{}
 
 		if err := render.DecodeJSON(r.Body, &request); err != nil {
-			render.Status(r, http.StatusBadRequest)
-			render.JSON(w, r, err)
+			errors.RederError(r, w, errors.NewBadRequestError())
 			return
 		}
 
 		result, err := handler.Create(ctx, &request)
 		if err != nil {
-			render.Status(r, http.StatusInternalServerError)
-			render.JSON(w, r, err)
+			errors.RederError(r, w, err)
 			return
 		}
 		render.Status(r, http.StatusOK)
@@ -84,10 +80,9 @@ func ProductLoader(handler usecase.Product) http.HandlerFunc {
 			ID: chi.URLParam(r, "id"),
 		}
 
-		result, err := handler.Load(ctx, &request)
+		result, err := handler.GetDetail(ctx, &request)
 		if err != nil {
-			render.Status(r, http.StatusInternalServerError)
-			render.JSON(w, r, err)
+			errors.RederError(r, w, err)
 			return
 		}
 		render.Status(r, http.StatusOK)

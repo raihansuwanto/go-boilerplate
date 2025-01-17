@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/go-pg/pg/v10"
+	"github.com/raihansuwanto/go-boilerplate/package/errors"
 	"github.com/raihansuwanto/go-boilerplate/package/logger"
 )
 
@@ -43,7 +44,7 @@ func (r *genericRepository[T]) LoadMany(ctx context.Context, filters ...Filter) 
 	err := query.Select()
 	if err != nil {
 		logger.WithContext(ctx).WithError(err).Error("failed to load entities")
-		return nil, err
+		return nil, errors.NewInternalSystemError()
 	}
 
 	return entities, nil
@@ -59,8 +60,11 @@ func (r *genericRepository[T]) Load(ctx context.Context, filters ...Filter) (*T,
 
 	err := query.Select()
 	if err != nil {
+		if err == pg.ErrNoRows {
+			return nil, errors.NewDataNotFoundError()
+		}
 		logger.WithContext(ctx).WithError(err).Error("failed to load entity")
-		return nil, err
+		return nil, errors.NewInternalSystemError().WithMessage(err.Error())
 	}
 
 	return &entity, nil
@@ -70,7 +74,7 @@ func (r *genericRepository[T]) Create(ctx context.Context, entity *T) error {
 	_, err := r.db.WithContext(ctx).Model(entity).Insert()
 	if err != nil {
 		logger.WithContext(ctx).WithError(err).Error("failed to create entity")
-		return err
+		return errors.NewInternalSystemError().WithMessage(err.Error())
 	}
 
 	return nil
@@ -80,7 +84,7 @@ func (r *genericRepository[T]) InsertMany(ctx context.Context, entities []*T) ([
 	_, err := r.db.WithContext(ctx).Model(&entities).Insert()
 	if err != nil {
 		logger.WithContext(ctx).WithError(err).Error("failed to insert entities")
-		return nil, err
+		return nil, errors.NewInternalSystemError().WithMessage(err.Error())
 	}
 
 	return entities, nil
@@ -91,7 +95,7 @@ func (r *genericRepository[T]) Delete(ctx context.Context, id interface{}) error
 	_, err := r.db.WithContext(ctx).Model(&entity).Where("id = ?", id).Delete()
 	if err != nil {
 		logger.WithContext(ctx).WithError(err).Error("failed to delete entity")
-		return err
+		return errors.NewInternalSystemError().WithMessage(err.Error())
 	}
 	return nil
 }
@@ -106,7 +110,7 @@ func (r *genericRepository[T]) Update(ctx context.Context, entity *T, filters ..
 	_, err := query.Update()
 	if err != nil {
 		logger.WithContext(ctx).WithError(err).Error("failed to update entity")
-		return nil, err
+		return nil, errors.NewInternalSystemError().WithMessage(err.Error())
 	}
 
 	return entity, nil
@@ -122,7 +126,7 @@ func (r *genericRepository[T]) Replace(ctx context.Context, entity *T, filters .
 	_, err := query.Insert()
 	if err != nil {
 		logger.WithContext(ctx).WithError(err).Error("failed to replace entity")
-		return err
+		return errors.NewInternalSystemError().WithMessage(err.Error())
 	}
 	return nil
 }
